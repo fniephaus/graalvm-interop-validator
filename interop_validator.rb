@@ -27,7 +27,7 @@ end
 
 expression = ARGV[1]
 
-puts "> Running on #{RUBY_DESCRIPTION}..."
+puts "> Running on #{RUBY_DESCRIPTION}...  "
 puts "> Evaluating `#{expression}` for #{language_id}...\n\n"
 
 def validate_interop_members(target, next_targets)
