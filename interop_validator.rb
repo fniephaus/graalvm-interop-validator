@@ -1,5 +1,7 @@
 require 'optparse'
 
+INTEROP_MEMBER_PROPERTIES = ['existing', 'insertable', 'invocable', 'modifiable', 'readable', 'removable', 'writable']
+
 $options = {verbose: false, depth: 1}
 OptionParser.new do |opts|
   opts.banner = "Usage: interop_validator.rb [options] <language_id> <expression>"
@@ -47,6 +49,17 @@ def validate_interop_members(target, next_targets)
         next_targets.append(Truffle::Interop.read_member(target, member))
       rescue => e
         unreadable.append("- `#{member}` (unreadable: *#{e}*)")
+      end
+    else
+      all_properties_false = true
+      for property in INTEROP_MEMBER_PROPERTIES
+        if Truffle::Interop.send("is_member_#{property}?", target, member)
+          all_properties_false = false
+          break
+        end
+      end
+      if all_properties_false
+        unreadable.append("- `#{member}` (not any of #{INTEROP_MEMBER_PROPERTIES})")
       end
     end
   }
