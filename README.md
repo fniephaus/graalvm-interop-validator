@@ -1,4 +1,4 @@
-# Interop Validator for GraalVM
+# Interop Validator for GraalVM [![CI](https://github.com/fniephaus/graalvm-interop-validator/workflows/CI/badge.svg)](https://github.com/fniephaus/graalvm-interop-validator/actions/)
 Utility to validate the language interoperability interface of Truffle objects.
 
 
