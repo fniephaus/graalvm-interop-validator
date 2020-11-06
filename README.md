@@ -14,12 +14,13 @@ Usage: interop_validator.rb [options] <language_id> <expression>
 ## Example
 
 ```bash
-$ $GRAALVM_HOME/bin/polyglot --jvm interop_validator.rb python "import os; os"
+$ $GRAALVM_HOME/bin/polyglot --jvm interop_validator.rb --depth 2 python "import os; os"
 ```
 
 ### Result
 
 > Running on truffleruby 21.0.0-dev-eb72eb83, like ruby 2.6.6, GraalVM CE JVM [x86_64-darwin]...
+> Evaluating `import os; os` for python...
 
 #### Unreadable member(s) of `#<Python <module 'os' from '/languages/python/lib-python/3/os.py'>>`
 - `_add` (*Unknown identifier: _add*)

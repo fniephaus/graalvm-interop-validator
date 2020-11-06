@@ -1,6 +1,6 @@
 require 'optparse'
 
-$options = {verbose: false, depth: 2}
+$options = {verbose: false, depth: 1}
 OptionParser.new do |opts|
     opts.banner = "Usage: interop_validator.rb [options] <language_id> <expression>"
 
@@ -8,7 +8,7 @@ OptionParser.new do |opts|
         $options[:verbose] = v
     end
 
-    opts.on("-d", "--depth [DEPTH]", "Set scan depth (default: 2)") do |v|
+    opts.on("-d", "--depth [DEPTH]", "Set scan depth (default: 1)") do |v|
         $options[:depth] = Integer(v) rescue nil
     end
 end.parse!
@@ -158,6 +158,7 @@ def sanitize(target)
     text
 end
 
-puts "> Running on #{RUBY_DESCRIPTION}...\n\n"
+puts "> Running on #{RUBY_DESCRIPTION}..."
+puts "> Evaluating `#{expression}` for #{language_id}...\n\n"
 
 validate_interop_contract(Polyglot.eval(language_id, expression), $options[:depth])
