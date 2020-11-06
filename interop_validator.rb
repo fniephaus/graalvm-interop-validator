@@ -42,10 +42,12 @@ def validate_interop_members(target, next_targets)
   end
   unreadable = []
   members.each { |member|
-    begin
-      next_targets.append(Truffle::Interop.read_member(target, member))
-    rescue => e
-      unreadable.append("- `#{member}` (*#{e}*)")
+    if Truffle::Interop.is_member_readable?(target, member)
+      begin
+        next_targets.append(Truffle::Interop.read_member(target, member))
+      rescue => e
+        unreadable.append("- `#{member}` (unreadable: *#{e}*)")
+      end
     end
   }
   if !unreadable.empty?
