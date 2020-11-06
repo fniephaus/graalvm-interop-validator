@@ -1,0 +1,26 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  build_and_run:
+    name: Build and run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up GraalVM
+        run: |
+          pushd "${HOME}" > /dev/null
+          latest_release=$(curl --silent "https://api.github.com/repos/graalvm/graalvm-ce-dev-builds/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          curl -sSL --retry 3 -o graalvm-ce.tar.gz "https://github.com/graalvm/graalvm-ce-dev-builds/releases/download/${latest_release}/graalvm-ce-java11-linux-amd64-dev.tar.gz"
+          tar xzf graalvm-ce.tar.gz
+          cd graalvm-ce-*
+          bin/gu install python ruby
+          echo "$(pwd)/bin" >> $GITHUB_PATH
+          popd > /dev/null
+      - name: "Validate Python: `import os; os`"
+        run: polyglot --jvm interop_validator.rb --depth 2 python "import os; os"
+      - name: "Validate Python: `globals()['__builtins__']`"
+        run: polyglot --jvm interop_validator.rb --depth 2 python "globals()['__builtins__']"
+      - name: "Validate Ruby: `Object.constants.collect {|c| Object.const_get c rescue nil}`"
+        run: polyglot --jvm interop_validator.rb --depth 2 ruby "Object.constants.collect {|c| Object.const_get c rescue nil}"
