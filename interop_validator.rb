@@ -48,7 +48,7 @@ def validate_interop_members(target, next_targets)
       begin
         next_targets.append(Truffle::Interop.read_member(target, member))
       rescue => e
-        unreadable.append("- `#{member}` (unreadable: *#{e}*)")
+        unreadable.append("- :x: `#{member}` (*unreadable: #{e}*)")
       end
     else
       all_properties_false = true
@@ -59,12 +59,14 @@ def validate_interop_members(target, next_targets)
         end
       end
       if all_properties_false
-        unreadable.append("- `#{member}` (not any of #{INTEROP_MEMBER_PROPERTIES})")
+        unreadable.append("- :x: `#{member}` (*not any of #{INTEROP_MEMBER_PROPERTIES}*)")
+      else
+        unreadable.append("- :warning: `#{member}` (*unreadable*)")
       end
     end
   }
   if !unreadable.empty?
-    puts "#### Unreadable member(s) of #{sanitize(target)}"
+    puts "#### Potentially defective member(s) of #{sanitize(target)}"
     puts unreadable.sort.join("\n")
     puts
   end
